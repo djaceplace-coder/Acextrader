@@ -11,14 +11,14 @@ import AuthHub from './pages/AuthHub';
 import DashboardHome from './pages/Dashboard/DashboardHome';
 import StrategyCenter from './pages/Dashboard/StrategyCenter';
 import ManualTrade from './pages/Dashboard/ManualTrade';
+import Banking from './pages/Dashboard/Banking';
+import Portfolio from './pages/Dashboard/Portfolio';
 import AdminPanel from './pages/Admin/AdminPanel';
 
 // ==========================================
-// 2. INLINE PLACEHOLDERS (FOR UNBUILT PAGES)
+// 2. INLINE PLACEHOLDERS (FOR FINAL UNBUILT PAGES)
 // ==========================================
-const PortfolioPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Portfolio Analytics Building...</div>;
 const TransactionsPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Transaction Logs Building...</div>;
-const BankingPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Banking & Transfers Building...</div>;
 const SettingsPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Settings Building...</div>;
 
 // ==========================================
@@ -68,7 +68,7 @@ class RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
 // 4. MAIN ROUTER APPLICATION
 // ==========================================
 export default function App() {
-  // Set this to true temporarily so you can view the dashboard
+  // Set this to true temporarily so you can view the dashboard without a backend
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); 
   const [tradingMode, setTradingMode] = useState<'DEMO' | 'LIVE'>('DEMO');
 
@@ -95,9 +95,9 @@ export default function App() {
           <Route index element={<DashboardHome />} />
           <Route path="strategy" element={<StrategyCenter />} />
           <Route path="trade" element={<ManualTrade />} />
-          <Route path="portfolio" element={<PortfolioPlaceholder />} />
+          <Route path="portfolio" element={<Portfolio />} />
+          <Route path="banking" element={<Banking />} />
           <Route path="transactions" element={<TransactionsPlaceholder />} />
-          <Route path="banking" element={<BankingPlaceholder />} />
           <Route path="settings" element={<SettingsPlaceholder />} />
         </Route>
 
