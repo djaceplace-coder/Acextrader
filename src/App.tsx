@@ -7,21 +7,15 @@ import { ShieldAlert, RefreshCw } from 'lucide-react';
 // ==========================================
 import DashboardLayout from './layouts/DashboardLayout';
 import LandingPage from './pages/LandingPage';
+import AuthHub from './pages/AuthHub';
 import DashboardHome from './pages/Dashboard/DashboardHome';
 import StrategyCenter from './pages/Dashboard/StrategyCenter';
+import ManualTrade from './pages/Dashboard/ManualTrade';
 import AdminPanel from './pages/Admin/AdminPanel';
 
 // ==========================================
-// 2. INLINE PLACEHOLDERS (PREVENTS BUILD CRASHES)
+// 2. INLINE PLACEHOLDERS (FOR UNBUILT PAGES)
 // ==========================================
-// These safely catch the routes we are about to build next.
-const AuthHub = () => (
-  <div className="min-h-screen bg-slate-950 flex items-center justify-center flex-col gap-4">
-    <div className="text-cyan-400 font-mono text-xl animate-pulse">Authentication Hub Compiling...</div>
-    <button onClick={() => window.location.hash = '#/dashboard'} className="text-xs bg-slate-800 text-white px-4 py-2 rounded">Bypass to Dashboard</button>
-  </div>
-);
-const TradePlaceholder = () => <div className="p-8 text-slate-400 font-mono">Manual Order Entry Building...</div>;
 const PortfolioPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Portfolio Analytics Building...</div>;
 const TransactionsPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Transaction Logs Building...</div>;
 const BankingPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Banking & Transfers Building...</div>;
@@ -74,7 +68,7 @@ class RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
 // 4. MAIN ROUTER APPLICATION
 // ==========================================
 export default function App() {
-  // Temporary bypass so you can see the dashboard while we build Auth
+  // Set this to true temporarily so you can view the dashboard
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); 
   const [tradingMode, setTradingMode] = useState<'DEMO' | 'LIVE'>('DEMO');
 
@@ -100,7 +94,7 @@ export default function App() {
         >
           <Route index element={<DashboardHome />} />
           <Route path="strategy" element={<StrategyCenter />} />
-          <Route path="trade" element={<TradePlaceholder />} />
+          <Route path="trade" element={<ManualTrade />} />
           <Route path="portfolio" element={<PortfolioPlaceholder />} />
           <Route path="transactions" element={<TransactionsPlaceholder />} />
           <Route path="banking" element={<BankingPlaceholder />} />
