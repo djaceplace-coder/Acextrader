@@ -19,10 +19,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # We removed the cache requirement here so it stops looking for the lock file
 
       - name: Install System Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Compile Terminal Application
         run: npm run build
