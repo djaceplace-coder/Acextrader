@@ -1,19 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import React, { useState } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ShieldAlert, RefreshCw } from 'lucide-react';
 
-// Layout Wrappers
+// ==========================================
+// 1. IMPORT COMPLETED COMPONENTS
+// ==========================================
 import DashboardLayout from './layouts/DashboardLayout';
-
-// Core Pages (To be built sequentially)
+import LandingPage from './pages/LandingPage';
+import DashboardHome from './pages/Dashboard/DashboardHome';
 import StrategyCenter from './pages/Dashboard/StrategyCenter';
 import AdminPanel from './pages/Admin/AdminPanel';
 
-// --- INLINE CIRCUIT BREAKER (ERROR BOUNDARY) ---
+// ==========================================
+// 2. INLINE PLACEHOLDERS (PREVENTS BUILD CRASHES)
+// ==========================================
+// These safely catch the routes we are about to build next.
+const AuthHub = () => (
+  <div className="min-h-screen bg-slate-950 flex items-center justify-center flex-col gap-4">
+    <div className="text-cyan-400 font-mono text-xl animate-pulse">Authentication Hub Compiling...</div>
+    <button onClick={() => window.location.hash = '#/dashboard'} className="text-xs bg-slate-800 text-white px-4 py-2 rounded">Bypass to Dashboard</button>
+  </div>
+);
+const TradePlaceholder = () => <div className="p-8 text-slate-400 font-mono">Manual Order Entry Building...</div>;
+const PortfolioPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Portfolio Analytics Building...</div>;
+const TransactionsPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Transaction Logs Building...</div>;
+const BankingPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Banking & Transfers Building...</div>;
+const SettingsPlaceholder = () => <div className="p-8 text-slate-400 font-mono">Settings Building...</div>;
+
+// ==========================================
+// 3. CIRCUIT BREAKER (ERROR BOUNDARY)
+// ==========================================
 interface GuardProps { children: React.ReactNode; }
 interface GuardState { hasError: boolean; errorText: string; }
 
-className RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
+class RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
   constructor(props: GuardProps) {
     super(props);
     this.state = { hasError: false, errorText: '' };
@@ -32,7 +52,7 @@ className RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
             <h2 className="text-lg font-bold">Terminal Interface Isolated</h2>
           </div>
           <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-            A background data parsing execution anomaly occurred. The terminal state has been preserved to prevent asset loss.
+            A background data parsing execution anomaly occurred. The terminal state has been preserved.
           </p>
           <div className="bg-slate-950 p-3 rounded-xl text-[11px] text-red-300 border border-slate-800 break-all mb-4">
             Code Trace: {this.state.errorText || "Unknown Execution Reference"}
@@ -50,26 +70,20 @@ className RouteCircuitBreaker extends React.Component<GuardProps, GuardState> {
   }
 }
 
-// --- TEMPORARY INTERFACE PLACEHOLDERS FOR ROUTE VALIDATION ---
-const PlaceholderLanding = () => <div className="p-8 text-slate-400 font-mono">Landing Page Expansion Hub.</div>;
-const PlaceholderAuth = () => <div className="p-8 text-slate-400 font-mono">Authentication & Web3 Link Desk.</div>;
-const PlaceholderHome = () => <div className="p-8 text-slate-400 font-mono">Overview Dashboard Main View.</div>;
-const PlaceholderTrade = () => <div className="p-8 text-slate-400 font-mono">Manual Order Entry Desk.</div>;
-const PlaceholderPortfolio = () => <div className="p-8 text-slate-400 font-mono">Portfolio Analytics Ledger.</div>;
-const PlaceholderTransactions = () => <div className="p-8 text-slate-400 font-mono">Global Audit Trail Logs.</div>;
-const PlaceholderBanking = () => <div className="p-8 text-slate-400 font-mono">Inbound / Outbound Settlement Hub.</div>;
-const PlaceholderSettings = () => <div className="p-8 text-slate-400 font-mono">Terminal Preference Parameters.</div>;
-
+// ==========================================
+// 4. MAIN ROUTER APPLICATION
+// ==========================================
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); // Temporarily true for layout buildout
+  // Temporary bypass so you can see the dashboard while we build Auth
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); 
   const [tradingMode, setTradingMode] = useState<'DEMO' | 'LIVE'>('DEMO');
 
   return (
     <HashRouter>
       <Routes>
         {/* Public Suite Routes */}
-        <Route path="/" element={<RouteCircuitBreaker><PlaceholderLanding /></RouteCircuitBreaker>} />
-        <Route path="/auth" element={<RouteCircuitBreaker><PlaceholderAuth /></RouteCircuitBreaker>} />
+        <Route path="/" element={<RouteCircuitBreaker><LandingPage /></RouteCircuitBreaker>} />
+        <Route path="/auth" element={<RouteCircuitBreaker><AuthHub /></RouteCircuitBreaker>} />
 
         {/* Protected DeFi Terminal Workspace */}
         <Route 
@@ -84,13 +98,13 @@ export default function App() {
             )
           }
         >
-          <Route index element={<PlaceholderHome />} />
+          <Route index element={<DashboardHome />} />
           <Route path="strategy" element={<StrategyCenter />} />
-          <Route path="trade" element={<PlaceholderTrade />} />
-          <Route path="portfolio" element={<PlaceholderPortfolio />} />
-          <Route path="transactions" element={<PlaceholderTransactions />} />
-          <Route path="banking" element={<PlaceholderBanking />} />
-          <Route path="settings" element={<PlaceholderSettings />} />
+          <Route path="trade" element={<TradePlaceholder />} />
+          <Route path="portfolio" element={<PortfolioPlaceholder />} />
+          <Route path="transactions" element={<TransactionsPlaceholder />} />
+          <Route path="banking" element={<BankingPlaceholder />} />
+          <Route path="settings" element={<SettingsPlaceholder />} />
         </Route>
 
         {/* Hidden Control Override Dashboard */}
@@ -102,4 +116,3 @@ export default function App() {
     </HashRouter>
   );
 }
-
